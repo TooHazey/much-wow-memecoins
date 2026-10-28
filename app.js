@@ -289,7 +289,7 @@ $('rugForm').addEventListener('change', () => {
 });
 
 /* ---------- pump or dump ---------- */
-let gameCoin = null, score = 0, streak = 0, best = +(localStorage.getItem('mw-best') || 0), locked = false;
+let gameCoin = null, score = 0, streak = 0, best = 0, locked = false;
 $('gBest').textContent = best;
 function nextRound() {
   const pool = coins.filter(c => c[K.d1] != null && c !== gameCoin);
@@ -305,7 +305,7 @@ document.querySelectorAll('[data-guess]').forEach(b => b.addEventListener('click
   if (locked || !gameCoin) return; locked = true;
   const v = gameCoin[K.d1], ok = (b.dataset.guess === 'up') === (v >= 0), g = $('game');
   if (ok) { score++; streak++; } else streak = 0;
-  if (streak > best) { best = streak; localStorage.setItem('mw-best', best); }
+  if (streak > best) best = streak;
   $('gScore').textContent = score; $('gStreak').textContent = streak; $('gBest').textContent = best;
   $('gRes').innerHTML = `${ok ? 'Correct.' : 'Wrong.'} ${esc(gameCoin.symbol.toUpperCase())} ${v >= 0 ? 'pumped' : 'dumped'} <span class="${v >= 0 ? 'up' : 'dn'}">${sign(v)}</span> in 24h.`;
   g.classList.remove('win', 'lose'); void g.offsetWidth; g.classList.add(ok ? 'win' : 'lose');
