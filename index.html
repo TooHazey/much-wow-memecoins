@@ -4,129 +4,316 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>MUCH WOW — The Meme Coin Field Guide</title>
-<meta name="description" content="Live meme coin prices, a short history of internet money jokes, a rug-pull field guide, and a parody coin generator.">
+<meta name="description" content="Live meme coin prices, a market heatmap, sector breakdowns, the full lore, a rug-pull field guide, a regret calculator, a pump-or-dump game and a parody coin forge.">
+<meta property="og:title" content="MUCH WOW — The Meme Coin Field Guide">
+<meta property="og:description" content="Live meme coin board, heatmap, lore, rug-pull guide and games.">
+<meta property="og:image" content="img/hero-mascots.webp">
+<meta name="theme-color" content="#0e0e0c">
 <link rel="preconnect" href="https://api.fontshare.com">
 <link href="https://api.fontshare.com/v2/css?f[]=clash-display@600,700&f[]=satoshi@400,500,700&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='15' fill='%23d4ff3a'/><text x='16' y='22' font-size='16' text-anchor='middle' font-family='monospace' font-weight='700'>W</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='15' fill='%23d4ff3a' stroke='black' stroke-width='2'/><text x='16' y='22' font-size='16' text-anchor='middle' font-family='monospace' font-weight='700'>W</text></svg>">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <a class="skip" href="#board">Skip to live board</a>
 
-<div class="ticker" aria-label="Live meme coin prices">
-  <div class="ticker-track" id="ticker"></div>
-</div>
+<div class="ticker" aria-label="Live meme coin prices"><div class="ticker-track" id="ticker"><span>Loading the degen tape…</span></div></div>
 
 <header class="nav">
-  <a href="#" class="brand">MUCH<span>WOW</span></a>
-  <nav>
+  <a href="#top" class="brand" aria-label="Much Wow home">MUCH<span>WOW</span></a>
+  <nav aria-label="Sections">
     <a href="#board">Board</a>
+    <a href="#heat">Heatmap</a>
+    <a href="#sectors">Sectors</a>
     <a href="#history">Lore</a>
     <a href="#guide">Field guide</a>
-    <a href="#forge">Coin forge</a>
+    <a href="#play">Play</a>
+    <a href="#forge">Forge</a>
   </nav>
+  <span class="live mono" id="liveDot"><i></i><span>Connecting</span></span>
 </header>
 
-<main>
+<main id="top">
+<!-- HERO -->
 <section class="hero">
+  <canvas id="rain" aria-hidden="true"></canvas>
   <div class="hero-copy">
     <p class="eyebrow mono">// the internet's favorite joke, now with a market cap</p>
     <h1>Very coin.<br><em>Much</em> market.<br>So <span class="hl">risk</span>.</h1>
-    <p class="lede">Meme coins are tokens with no product, no roadmap, and sometimes billions in value — powered entirely by community, timing, and vibes. Here's the live scoreboard, the lore, and how not to get rugged.</p>
-    <div class="hero-stats">
-      <div><span class="mono label">Top-25 meme cap</span><strong id="statCap">—</strong></div>
-      <div><span class="mono label">24h volume</span><strong id="statVol">—</strong></div>
-      <div><span class="mono label">Pumping today</span><strong id="statUp">—</strong></div>
+    <p class="lede">Meme coins are tokens with no product, no roadmap and, sometimes, billions in value, held up by community, timing and vibes. This page has the live scoreboard, the lore, the warning signs and a few games.</p>
+    <div class="cta">
+      <a href="#board" class="btn btn-lime">See the live board</a>
+      <a href="#play" class="btn btn-ghost">Play pump or dump</a>
     </div>
   </div>
-  <div class="hero-art" aria-hidden="true">
-    <canvas id="coinCanvas"></canvas>
-    <div class="sticker s1">NOT FINANCIAL ADVICE</div>
-    <div class="sticker s2">WAGMI?</div>
-    <div class="sticker s3">1 DOGE = 1 DOGE</div>
+  <figure class="hero-art">
+    <img src="img/hero-mascots.webp" alt="Cartoon dog, raccoon, penguin and laser-eyed cat riding a giant coin like a rocket" width="900" height="1331" fetchpriority="high">
+    <div class="sticker s1" aria-hidden="true">NOT FINANCIAL ADVICE</div>
+    <div class="sticker s2" aria-hidden="true">WAGMI?</div>
+    <div class="sticker s3" aria-hidden="true">1 DOGE = 1 DOGE</div>
+  </figure>
+  <div class="hero-stats">
+    <div><span class="label mono">Meme sector cap</span><strong id="statCap">—</strong><small id="statCapChg" class="mono">&nbsp;</small></div>
+    <div><span class="label mono">Share of all crypto</span><strong id="statShare">—</strong><small class="mono muted">of total market cap</small></div>
+    <div><span class="label mono">24h meme volume</span><strong id="statVol">—</strong><small class="mono muted">traded today</small></div>
+    <div><span class="label mono">Pumping today</span><strong id="statUp">—</strong><small class="mono muted">of top 50 green</small></div>
   </div>
 </section>
 
+<div class="band" aria-hidden="true"><div class="band-track">
+  <span>WAGMI</span><b>✱</b><span>DIAMOND HANDS</span><b>✱</b><span>LFG</span><b>✱</b><span>SEND IT</span><b>✱</b><span>DEV IS BASED</span><b>✱</b><span>NGMI</span><b>✱</b><span>TO THE MOON</span><b>✱</b><span>PAPER HANDS</span><b>✱</b>
+  <span>WAGMI</span><b>✱</b><span>DIAMOND HANDS</span><b>✱</b><span>LFG</span><b>✱</b><span>SEND IT</span><b>✱</b><span>DEV IS BASED</span><b>✱</b><span>NGMI</span><b>✱</b><span>TO THE MOON</span><b>✱</b><span>PAPER HANDS</span><b>✱</b>
+</div></div>
+
+<!-- BOARD -->
 <section id="board" class="board">
   <div class="sec-head">
-    <h2>The live board</h2>
+    <div><span class="idx mono">01</span><h2>The live board</h2></div>
     <p class="mono small" id="status">Loading prices…</p>
   </div>
+  <div class="movers" id="movers"></div>
   <div class="controls">
     <input id="search" type="search" placeholder="Search a ticker… (try PEPE)" aria-label="Search coins">
-    <div class="seg" role="group" aria-label="Sort">
+    <div class="seg" role="group" aria-label="Sort by">
       <button data-sort="market_cap" class="on">Mkt cap</button>
+      <button data-sort="price_change_percentage_1h_in_currency" class="hide-sm">1h</button>
       <button data-sort="price_change_percentage_24h_in_currency">24h</button>
       <button data-sort="price_change_percentage_7d_in_currency">7d</button>
+      <button data-sort="price_change_percentage_30d_in_currency" class="hide-sm">30d</button>
       <button data-sort="total_volume">Volume</button>
     </div>
   </div>
   <div class="table-wrap">
     <table>
-      <thead><tr><th>#</th><th>Coin</th><th class="r">Price</th><th class="r">24h</th><th class="r hide-sm">7d</th><th class="r hide-sm">Market cap</th><th class="r hide-md">7-day</th></tr></thead>
+      <thead><tr><th class="hide-sm">#</th><th>Coin</th><th class="r">Price</th><th class="r hide-md">1h</th><th class="r">24h</th><th class="r hide-sm">7d</th><th class="r hide-md">30d</th><th class="r hide-sm">Market cap</th><th class="r hide-md">7-day</th></tr></thead>
       <tbody id="rows"></tbody>
     </table>
   </div>
-  <p class="mono small muted">Data: <a href="https://www.coingecko.com/en/categories/meme-token" target="_blank" rel="noopener">CoinGecko meme-token category</a>. Refreshes every 60s.</p>
-</section>
-
-<section id="history" class="history">
-  <div class="sec-head"><h2>The lore</h2><p class="small muted">A very abridged timeline of jokes that got out of hand.</p></div>
-  <ol class="timeline">
-    <li><span class="yr mono">2013</span><h3>Dogecoin</h3><p>Billy Markus and Jackson Palmer fork Litecoin tech and slap a Shiba Inu on it as a parody of crypto hype. It becomes the original meme coin — and a top-10 asset years later.</p></li>
-    <li><span class="yr mono">2020</span><h3>Shiba Inu</h3><p>An anonymous founder, "Ryoshi," launches the self-styled "Dogecoin killer." Half the supply is sent to Vitalik Buterin, who later burns most of it and donates the rest.</p></li>
-    <li><span class="yr mono">2021</span><h3>The Elon era</h3><p>Tweets move markets. DOGE runs from fractions of a cent to roughly $0.70 in May 2021 amid a celebrity- and retail-fueled frenzy.</p></li>
-    <li><span class="yr mono">2022</span><h3>BONK</h3><p>Airdropped to the Solana community on Christmas, BONK kickstarts Solana's meme season after the FTX collapse.</p></li>
-    <li><span class="yr mono">2023</span><h3>PEPE &amp; WIF</h3><p>A frog and a dog in a knitted hat. PEPE rockets on Ethereum in spring; dogwifhat becomes Solana's mascot by year end.</p></li>
-    <li><span class="yr mono">2024</span><h3>Launchpad mania</h3><p>Bonding-curve launchpads like pump.fun make spinning up a token take seconds. Millions of coins launch; almost all go to zero.</p></li>
-    <li><span class="yr mono">2025</span><h3>Political memes</h3><p>$TRUMP launches days before the U.S. inauguration and briefly hits a multibillion-dollar valuation, pushing meme coins into mainstream politics.</p></li>
-  </ol>
-</section>
-
-<section id="guide" class="guide">
-  <div class="sec-head"><h2>Degen field guide</h2><p class="small muted">Six red flags to check before you ape in.</p></div>
-  <div class="cards">
-    <article class="card"><span class="num mono">01</span><h3>Unlocked liquidity</h3><p>If the liquidity pool isn't locked or burned, the dev can pull it and leave you holding a token nobody can buy.</p></article>
-    <article class="card"><span class="num mono">02</span><h3>Whale concentration</h3><p>A handful of wallets holding a big slice of supply means one sell can crater the chart. Check the holder list.</p></article>
-    <article class="card"><span class="num mono">03</span><h3>Honeypot contracts</h3><p>Some contracts let you buy but block selling. Test with a tiny amount or use a honeypot checker first.</p></article>
-    <article class="card"><span class="num mono">04</span><h3>Mint &amp; freeze authority</h3><p>On Solana, active mint authority means infinite new supply; freeze authority means your tokens can be locked.</p></article>
-    <article class="card"><span class="num mono">05</span><h3>Paid hype</h3><p>Sudden influencer shills and bot-filled chats often signal a coordinated pump — and a coordinated dump.</p></article>
-    <article class="card"><span class="num mono">06</span><h3>FOMO entries</h3><p>Buying after a 50x candle is how exit liquidity is made. Only risk what you'd be fine losing entirely.</p></article>
+  <div class="board-foot">
+    <button class="btn btn-ghost" id="more">Show all 50</button>
+    <p class="mono small muted">Tap any coin for details. Data from the <a href="https://www.coingecko.com/en/categories/meme-token" target="_blank" rel="noopener">CoinGecko meme-token category</a>, refreshed every 60s.</p>
   </div>
 </section>
 
+<!-- HEATMAP -->
+<section id="heat" class="heat">
+  <div class="sec-head">
+    <div><span class="idx mono">02</span><h2>Heatmap</h2></div>
+    <div class="seg" role="group" aria-label="Heatmap timeframe">
+      <button data-heat="price_change_percentage_24h_in_currency" class="on">24h</button>
+      <button data-heat="price_change_percentage_7d_in_currency">7d</button>
+      <button data-heat="price_change_percentage_30d_in_currency">30d</button>
+    </div>
+  </div>
+  <p class="small muted intro">Tile size is market cap, color is price change. Dogecoin is so big that it takes up a large part of the map by itself.</p>
+  <div class="treemap" id="treemap" role="img" aria-label="Treemap of meme coins by market cap"></div>
+  <div class="legend mono small"><span>-15%</span><i></i><span>+15%</span></div>
+</section>
+
+<!-- SECTORS -->
+<section id="sectors" class="sectors">
+  <div class="sec-head">
+    <div><span class="idx mono">03</span><h2>Where memes live</h2></div>
+    <p class="small muted">Meme sub-sectors by chain and theme, by market cap.</p>
+  </div>
+  <div class="sector-list" id="sectorList"></div>
+  <div class="chains">
+    <article><h3>Solana</h3><p>The home of fast, cheap launches. BONK, WIF and the pump.fun launchpad made Solana the busiest meme chain.</p></article>
+    <article><h3>Ethereum</h3><p>Home of the older memes. SHIB, PEPE and FLOKI started here. Fees are higher, and so are the market caps.</p></article>
+    <article><h3>BNB &amp; Base</h3><p>Exchange-backed chains with their own launchpads (Four.meme on BNB, Zora-style coins on Base) and big retail user bases.</p></article>
+    <article><h3>Everywhere else</h3><p>TON, Sui, Tron and even Bitcoin have meme scenes. Wherever block space is cheap, a dog coin shows up eventually.</p></article>
+  </div>
+</section>
+
+<!-- LORE -->
+<section id="history" class="history">
+  <div class="sec-head">
+    <div><span class="idx mono">04</span><h2>The lore</h2></div>
+    <p class="small muted">A timeline of internet jokes that got out of hand.</p>
+  </div>
+  <figure class="banner"><img src="img/lore-banner.webp" alt="Retro computer spewing a fountain of coins among rockets, moons and zigzag charts" width="1536" height="1024" loading="lazy"></figure>
+  <ol class="timeline">
+    <li><span class="yr mono">Dec 2013</span><h3>Dogecoin</h3><p>Billy Markus and Jackson Palmer fork Litecoin-era tech and put a Shiba Inu on it as a parody of crypto hype. It becomes the original meme coin.</p></li>
+    <li><span class="yr mono">2014</span><h3>To NASCAR</h3><p>The Dogecoin community crowdfunds a sponsorship for driver Josh Wise's car, an early sign of what a meme community can pay for.</p></li>
+    <li><span class="yr mono">Aug 2020</span><h3>Shiba Inu</h3><p>An anonymous founder, "Ryoshi," launches the self-styled "Dogecoin killer." Half the supply goes to Vitalik Buterin, who later burns most of it and donates the rest.</p></li>
+    <li><span class="yr mono">May 2021</span><h3>The Elon era</h3><p>Tweets move markets. DOGE climbs from under a cent to about $0.70 during a celebrity- and retail-driven frenzy.</p></li>
+    <li><span class="yr mono">Nov 2021</span><h3>Squid Game rug</h3><p>A token named after the hit show pumps thousands of percent, then its developers disappear with the money. It became the standard example of a rug pull.</p></li>
+    <li><span class="yr mono">Dec 2022</span><h3>BONK</h3><p>Airdropped to the Solana community at Christmas, BONK kicks off Solana's meme season after the FTX collapse.</p></li>
+    <li><span class="yr mono">2023</span><h3>PEPE &amp; WIF</h3><p>A frog and a dog in a knitted hat. PEPE takes off on Ethereum in spring, and dogwifhat becomes Solana's mascot by the end of the year.</p></li>
+    <li><span class="yr mono">Jan 2024</span><h3>pump.fun</h3><p>Bonding-curve launchpads make it possible to create a token in seconds. Millions launch, and almost all of them go to zero.</p></li>
+    <li><span class="yr mono">Mar 2024</span><h3>Hat on the Sphere</h3><p>WIF holders crowdfund to put the hat dog on the Las Vegas Sphere, showing how far a meme community will go for a bit.</p></li>
+    <li><span class="yr mono">Jan 2025</span><h3>$TRUMP</h3><p>Launched days before the U.S. inauguration, it briefly reaches a multibillion-dollar valuation and brings meme coins into mainstream politics.</p></li>
+    <li><span class="yr mono">Feb 2025</span><h3>LIBRA</h3><p>A token promoted by Argentina's president collapses within hours of launch and sets off a political scandal. Celebrity endorsement doesn't make a coin safe.</p></li>
+    <li><span class="yr mono">Today</span><h3>Your move</h3><p>Thousands of new tokens launch every day. Most last less than a week. The live board above shows the ones still standing.</p></li>
+  </ol>
+</section>
+
+<!-- LIFECYCLE -->
+<section id="cycle" class="cycle">
+  <div class="sec-head">
+    <div><span class="idx mono">05</span><h2>Anatomy of a pump</h2></div>
+    <p class="small muted">The typical life of a meme coin. Tap a stage.</p>
+  </div>
+  <div class="cycle-wrap">
+    <svg id="cycleSvg" viewBox="0 0 1000 360" preserveAspectRatio="none" role="img" aria-label="Hype curve showing the stages of a meme coin">
+      <defs><linearGradient id="cg" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#d4ff3a" stop-opacity=".35"/><stop offset="1" stop-color="#d4ff3a" stop-opacity="0"/></linearGradient></defs>
+      <path id="cycleArea" fill="url(#cg)"/>
+      <path id="cycleLine" fill="none" stroke="#d4ff3a" stroke-width="3"/>
+      <g id="cycleDots"></g>
+    </svg>
+  </div>
+  <div class="cycle-info" id="cycleInfo" aria-live="polite"></div>
+</section>
+
+<!-- GUIDE -->
+<section id="guide" class="guide">
+  <div class="sec-head">
+    <div><span class="idx mono">06</span><h2>Degen field guide</h2></div>
+    <p class="small muted">Red flags to check before you buy.</p>
+  </div>
+  <div class="guide-grid">
+    <figure class="rug"><img src="img/rug-pull.webp" alt="Hooded figure yanking a rug out from under a cartoon dog holding coins" width="1000" height="1000" loading="lazy"><figcaption class="mono small">fig. 1 — a rug pull, as it happens</figcaption></figure>
+    <div class="checker">
+      <h3>Rug-risk checklist</h3>
+      <p class="small muted">Tick everything that applies to the coin you're looking at.</p>
+      <form id="rugForm">
+        <label><input type="checkbox" value="25"> Liquidity isn't locked or burned</label>
+        <label><input type="checkbox" value="20"> Top 10 wallets hold over 30% of supply</label>
+        <label><input type="checkbox" value="25"> I can't confirm that selling works (possible honeypot)</label>
+        <label><input type="checkbox" value="15"> Mint or freeze authority is still active</label>
+        <label><input type="checkbox" value="10"> Anonymous dev with no track record</label>
+        <label><input type="checkbox" value="10"> Sudden influencer shilling or a bot-filled chat</label>
+        <label><input type="checkbox" value="10"> It's already up more than 20x this week</label>
+        <label><input type="checkbox" value="5"> No website or socials, just a ticker</label>
+      </form>
+      <div class="rug-out">
+        <div class="gauge"><i id="rugBar"></i></div>
+        <div class="rug-verdict"><strong id="rugScore" class="mono">0</strong><span id="rugText">Nothing ticked yet. Still not financial advice.</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="cards">
+    <article class="card"><span class="num mono">01</span><h3>Unlocked liquidity</h3><p>If the liquidity pool isn't locked or burned, the dev can pull it and leave you holding a token nobody can buy.</p></article>
+    <article class="card"><span class="num mono">02</span><h3>Whale concentration</h3><p>If a handful of wallets hold a big share of supply, one sale can crash the chart. Check the holder list.</p></article>
+    <article class="card"><span class="num mono">03</span><h3>Honeypot contracts</h3><p>Some contracts let you buy but block selling. Test with a tiny amount or use a honeypot checker first.</p></article>
+    <article class="card"><span class="num mono">04</span><h3>Mint &amp; freeze authority</h3><p>On Solana, active mint authority means new supply can be created without limit, and freeze authority means your tokens can be locked.</p></article>
+    <article class="card"><span class="num mono">05</span><h3>Paid hype</h3><p>Sudden influencer promotion and bot-filled chats often signal a coordinated pump, followed by a coordinated dump.</p></article>
+    <article class="card"><span class="num mono">06</span><h3>FOMO entries</h3><p>People who buy after a 50x candle are usually the ones early holders sell to. Only risk what you'd be fine losing completely.</p></article>
+  </div>
+</section>
+
+<!-- PLAY -->
+<section id="play" class="play">
+  <div class="sec-head">
+    <div><span class="idx mono">07</span><h2>Play</h2></div>
+    <p class="small muted">Two ways to learn the hard way, without real money.</p>
+  </div>
+  <div class="play-grid">
+    <div class="game panel" id="game">
+      <span class="label mono">Pump or dump</span>
+      <h3>Did it go up or down in the last 24h?</h3>
+      <div class="game-coin">
+        <img id="gImg" src="" alt="" width="72" height="72">
+        <div><strong id="gName">—</strong><span class="mono muted" id="gMeta">—</span></div>
+      </div>
+      <div class="game-btns">
+        <button class="btn btn-up" data-guess="up">Pump</button>
+        <button class="btn btn-dn" data-guess="dn">Dump</button>
+      </div>
+      <p class="game-res mono" id="gRes" aria-live="polite">&nbsp;</p>
+      <div class="game-score mono"><span>Score <b id="gScore">0</b></span><span>Streak <b id="gStreak">0</b></span><span>Best <b id="gBest">0</b></span></div>
+    </div>
+    <div class="regret panel">
+      <span class="label mono">Regret calculator</span>
+      <h3>If you had bought…</h3>
+      <div class="regret-in">
+        <label class="mono small" for="rAmt">I put in</label>
+        <div class="amt"><span>$</span><input id="rAmt" type="number" min="1" value="1000" inputmode="decimal"></div>
+        <label class="mono small" for="rCoin">into</label>
+        <select id="rCoin"></select>
+      </div>
+      <ul class="regret-out" id="rOut"></ul>
+      <p class="small muted">Based on CoinGecko's all-time high, all-time low and recent price changes. Ignores fees, slippage and your feelings.</p>
+    </div>
+  </div>
+</section>
+
+<!-- GLOSSARY -->
+<section id="glossary" class="glossary">
+  <div class="sec-head">
+    <div><span class="idx mono">08</span><h2>Degen dictionary</h2></div>
+    <input id="gSearch" type="search" placeholder="Look up slang…" aria-label="Search glossary">
+  </div>
+  <dl class="gloss" id="gloss"></dl>
+</section>
+
+<!-- FORGE -->
 <section id="forge" class="forge">
   <div class="forge-inner">
     <div>
+      <span class="idx mono dark">09</span>
       <h2>The coin forge</h2>
-      <p class="small">Mint a parody meme coin in one click. No blockchain, no money, no rug — just the bit.</p>
+      <p>Mint a parody meme coin in one click. No blockchain, no money and no rug pull, just the joke.</p>
       <form id="forgeForm" class="forge-form">
-        <label for="mascot" class="mono label">Your mascot / idea</label>
+        <label for="mascot" class="label mono">Your mascot / idea</label>
         <div class="row">
           <input id="mascot" placeholder="e.g. sleepy raccoon" maxlength="40">
-          <button type="submit" class="btn">Forge it</button>
+          <button type="submit" class="btn btn-dark">Forge it</button>
         </div>
       </form>
+      <img src="img/forge.webp" alt="Cartoon coin-minting machine stamping out coins" class="forge-img" width="1000" height="1050" loading="lazy">
     </div>
-    <div class="token-card" id="tokenCard" aria-live="polite">
-      <div class="tc-top"><span class="tc-logo" id="tcLogo">?</span><div><strong id="tcName">Your Coin</strong><span class="mono" id="tcTicker">$????</span></div></div>
-      <dl>
-        <div><dt>Total supply</dt><dd class="mono" id="tcSupply">—</dd></div>
-        <div><dt>Roadmap</dt><dd id="tcRoad">—</dd></div>
-        <div><dt>Slogan</dt><dd id="tcSlogan">—</dd></div>
-      </dl>
-      <div class="meter"><span class="mono label">Rug risk</span><div class="bar"><i id="tcRisk"></i></div><span class="mono" id="tcRiskTxt">—</span></div>
+    <div class="token-wrap">
+      <div class="token-card" id="tokenCard" aria-live="polite">
+        <div class="tc-top"><span class="tc-logo" id="tcLogo">?</span><div><strong id="tcName">Your Coin</strong><span class="mono" id="tcTicker">$????</span></div></div>
+        <dl>
+          <div><dt>Total supply</dt><dd class="mono" id="tcSupply">—</dd></div>
+          <div><dt>Chain</dt><dd id="tcChain">—</dd></div>
+          <div><dt>Roadmap</dt><dd id="tcRoad">—</dd></div>
+          <div><dt>Slogan</dt><dd id="tcSlogan">—</dd></div>
+          <div><dt>Tokenomics</dt><dd><div class="tok" id="tcTok"></div></dd></div>
+        </dl>
+        <div class="meter"><span class="mono label">Rug risk</span><div class="bar"><i id="tcRisk"></i></div><span class="mono" id="tcRiskTxt">—</span></div>
+      </div>
+      <button class="btn btn-dark copy" id="copyCoin" disabled>Copy shill post</button>
     </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq" class="faq">
+  <div class="sec-head"><div><span class="idx mono">10</span><h2>Honest FAQ</h2></div></div>
+  <div class="faq-list">
+    <details><summary>What actually makes a meme coin worth anything?</summary><p>Only what the next buyer will pay. There are usually no cash flows, no product and no claim on anything. The value comes from attention, community and liquidity. That's why prices can rise 100x and fall 99% so quickly.</p></details>
+    <details><summary>What is a bonding curve launch?</summary><p>Launchpads like pump.fun sell new tokens along a price curve, so each purchase raises the price for the next buyer. When the curve fills, the liquidity moves to a regular decentralized exchange. Launching costs almost nothing, so there are a huge number of tokens.</p></details>
+    <details><summary>Why do most meme coins go to zero?</summary><p>Attention runs out. Early holders and insiders sell into new demand, and once new buyers stop arriving, nothing holds the price up. Studies of launchpads keep finding that only a tiny share of tokens ever reach a meaningful market cap.</p></details>
+    <details><summary>Is this investment advice?</summary><p>No. This site is for entertainment and education. Meme coins are among the most volatile assets in existence. Never invest money you can't afford to lose, and be wary of anyone promising returns.</p></details>
   </div>
 </section>
 </main>
 
+<!-- MODAL -->
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="mName" hidden>
+  <div class="modal-card">
+    <button class="x" id="mClose" aria-label="Close">×</button>
+    <div class="m-head"><img id="mImg" src="" alt="" width="48" height="48"><div><h3 id="mName">—</h3><span class="mono muted" id="mSym">—</span></div><div class="m-price"><strong id="mPrice" class="mono">—</strong><span id="mChg" class="mono">—</span></div></div>
+    <div class="m-chart"><svg id="mChart" viewBox="0 0 600 220" preserveAspectRatio="none"></svg><div class="m-tip mono" id="mTip" hidden></div><span class="mono small muted m-cap">7-day price</span></div>
+    <div class="m-range"><span class="mono small">24h low <b id="mLo"></b></span><div class="rng"><i id="mRng"></i></div><span class="mono small">high <b id="mHi"></b></span></div>
+    <div class="m-grid" id="mGrid"></div>
+    <a class="mono small" id="mLink" target="_blank" rel="noopener">View on CoinGecko →</a>
+  </div>
+</div>
+
 <footer>
-  <p class="big">Not financial advice. Not even good advice.</p>
-  <p class="small muted">Meme coins are extremely volatile and most lose nearly all their value. This site is for entertainment and education. Prices via CoinGecko.</p>
+  <div class="foot-top">
+    <p class="big">Not financial advice.<br>Not even good advice.</p>
+    <a href="#top" class="btn btn-ghost">Back to top ↑</a>
+  </div>
+  <p class="small muted">Meme coins are extremely volatile, and most lose nearly all their value. This site is for entertainment and education only. Market data comes from <a href="https://www.coingecko.com" target="_blank" rel="noopener">CoinGecko</a>. Illustrations are original artwork. <a href="https://github.com/TooHazey/much-wow-memecoins" target="_blank" rel="noopener">Source on GitHub</a>.</p>
 </footer>
 
+<script src="https://cdn.jsdelivr.net/npm/d3-hierarchy@3"></script>
 <script src="fallback.js"></script>
 <script src="app.js"></script>
 </body>
